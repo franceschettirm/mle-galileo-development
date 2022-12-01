@@ -32,6 +32,7 @@ class Assistant:
 
     @staticmethod
     def _convert_column_types(dataframe) -> pd.DataFrame:
+        """Padroniza os tipos das colunas."""
         instructions = Assistant._get_conversion_dict()
 
         conv = {
