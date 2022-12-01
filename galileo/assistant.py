@@ -1,7 +1,5 @@
 import pandas as pd
 import numpy as np
-import datetime
-import pickle
 import logging
 
 from typing import List, Dict
@@ -73,9 +71,9 @@ class Assistant:
                     return Assistant._convert_column_types(self.dataframe)
             else:
                 print("No duplications found for given keys")
+                return self.dataframe
         except Exception as e:
-            print("Processed failed due to the following error:")
-            print(str(e))
-        finally:
+            print("Processed failed due to the following error:\n")
+            print(f"{str(e)}\n")
             print("Rolling back to the original dataframe")
             return Assistant._convert_column_types(self.dataframe)
