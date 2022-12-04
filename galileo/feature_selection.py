@@ -1,5 +1,9 @@
 """
+This file contains the implementation of feature selection techniques used by Galileo.
+
+Author: Rafael Franceschetti
 """
+
 from typing import Callable, List
 import numpy as np
 import pandas as pd
@@ -64,22 +68,31 @@ class IterativeFeatureSelection(BaseFeatureSelection):
 
     Attributes:
     ------------
-    dataframe : pd.DataFrame
-        The dataframe used for model training and evaluation.
-    test_size : float
-        Fraction of the dataframe used to test the model
+    model : Callable
+        Model used to select the features.
+    X_train : pd.DataFrame
+        The dataframe used for model training.
+    y_train : pd.Series
+        Target values for the training dataset
+    X_test : pd.DataFrame
+        The dataframe used for model evaluation
+    y_series : pd.Series
+        Target values for the testing dataset
     target_name : string
         The name of the target column in the dataframe
-    sample_size : int or float
-        The size of the dataframe used for feature selection
     threshold : float
         Maximum difference allowed between the best score and the score computed in each step
+    interval : list
+        Range of values for the iterative process of feature selection
+        default = [0.01, 1.0]
+    step : float
+        Step to increment each value of the interval
     metric : string
         The metric chosen for model evaluation
 
     Methods:
     ------------
-    build_selection_curve():
+    select_features():
         Execute the iterative feature selection process and returns the selected features.
 
     """
@@ -95,7 +108,7 @@ class IterativeFeatureSelection(BaseFeatureSelection):
         target_name: str,
         threshold: float,
         interval: List[float] = [0.01, 1.0],
-        step: int = 0.01,
+        step: float = 0.01,
         metric: str = "roc_auc",
     ) -> None:
         super().__init__(
@@ -215,7 +228,41 @@ class IterativeFeatureSelection(BaseFeatureSelection):
 
 class OneShotFeatureSelection(BaseFeatureSelection):
     """
-    DOCSTRING
+    Executes a one-time feature selection process using a machine learning model.
+    The result comes from the builtin feature importance method from the estimator.
+
+    Attributes:
+    ------------
+    model : Callable
+        Model used to select the features.
+    X_train : pd.DataFrame
+        The dataframe used for model training.
+    y_train : pd.Series
+        Target values for the training dataset
+    X_test : pd.DataFrame
+        The dataframe used for model evaluation
+    y_series : pd.Series
+        Target values for the testing dataset
+    target_name : string
+        The name of the target column in the dataframe
+    threshold : float
+        Maximum difference allowed between the best score and the score computed in each step
+    interval : list
+        Range of values for the iterative process of feature selection
+        default = [0.01, 1.0]
+    step : float
+        Step to increment each value of the interval
+    metric : string
+        The metric chosen for model evaluation
+    importance_getter : str
+        The method that the estimator uses to get its feature importance estimations
+        default = "named_steps.estimator.feature_importances_"
+
+    Methods:
+    ------------
+    select_features():
+        Execute the iterative feature selection process and returns the selected features.
+
     """
 
     def __init__(
